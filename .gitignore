@@ -34,6 +34,11 @@
 # Mac
 .DS_Store
 
+# Angular
+/dist
+/node_modules
+/.angular/cache
+
 # node.js
 /node_modules
 npm-debug.log

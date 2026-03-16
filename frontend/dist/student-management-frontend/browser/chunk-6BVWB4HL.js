@@ -1,1 +1,0 @@
-import{Cb as o,K as e,N as i,ac as n}from"./chunk-ND3YJ6NJ.js";var f=(()=>{class t{constructor(r){this.http=r}getCourses(){return this.http.get(`${n.apiUrl}/courses`)}static{this.\u0275fac=function(s){return new(s||t)(i(o))}}static{this.\u0275prov=e({token:t,factory:t.\u0275fac,providedIn:"root"})}}return t})();export{f as a};
