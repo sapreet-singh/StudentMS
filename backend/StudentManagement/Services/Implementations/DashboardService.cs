@@ -36,21 +36,28 @@ public class DashboardService : IDashboardService
         var data = await _context.Students
             .Where(s => s.EnrollmentDate >= start)
             .GroupBy(s => new { s.EnrollmentDate.Year, s.EnrollmentDate.Month })
-            .Select(g => new EnrollmentByMonth
+            .Select(g => new
             {
-                Year = g.Key.Year,
-                Month = g.Key.Month.ToString("00"),
+                g.Key.Year,
+                g.Key.Month,
                 Count = g.Count()
             })
             .OrderBy(e => e.Year).ThenBy(e => e.Month)
             .ToListAsync();
+
+        var enrollments = data.Select(d => new EnrollmentByMonth
+        {
+            Year = d.Year,
+            Month = d.Month.ToString("00"),
+            Count = d.Count
+        }).ToList();
 
         // Fill in missing months with 0
         var result = new List<EnrollmentByMonth>();
         for (int i = 0; i < 12; i++)
         {
             var date = start.AddMonths(i);
-            var existing = data.FirstOrDefault(d => d.Year == date.Year && d.Month == date.Month.ToString("00"));
+            var existing = enrollments.FirstOrDefault(d => d.Year == date.Year && d.Month == date.Month.ToString("00"));
             result.Add(new EnrollmentByMonth
             {
                 Year = date.Year,
