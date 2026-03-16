@@ -1,0 +1,81 @@
+<mat-sidenav-container class="sidenav-container">
+  <!-- Sidenav -->
+  <mat-sidenav #sidenav
+    [mode]="isHandset ? 'over' : 'side'"
+    [opened]="!isHandset"
+    class="sidenav">
+
+    <!-- Brand -->
+    <div class="brand">
+      <div class="brand-icon">
+        <mat-icon>school</mat-icon>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">StudentMS</span>
+        <span class="brand-sub">Management System</span>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Navigation -->
+    <nav class="nav-list">
+      <a *ngFor="let item of visibleNavItems"
+         [routerLink]="item.route"
+         routerLinkActive="nav-item-active"
+         class="nav-item"
+         (click)="onNavClick()">
+        <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+        <span class="nav-label">{{ item.label }}</span>
+      </a>
+    </nav>
+
+    <!-- User section at bottom -->
+    <div class="sidenav-footer">
+      <mat-divider></mat-divider>
+      <div class="user-info">
+        <div class="user-avatar">{{ userInitials }}</div>
+        <div class="user-details">
+          <span class="user-name">{{ currentUser?.username }}</span>
+          <span class="user-role">{{ currentUser?.role }}</span>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav>
+
+  <!-- Main content -->
+  <mat-sidenav-content class="main-content">
+    <!-- Toolbar -->
+    <mat-toolbar class="toolbar" color="primary">
+      <button mat-icon-button (click)="sidenav.toggle()" *ngIf="isHandset">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="toolbar-spacer"></span>
+
+      <!-- User menu -->
+      <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-btn">
+        <div class="toolbar-avatar">{{ userInitials }}</div>
+        <span class="toolbar-username">{{ currentUser?.username }}</span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+
+      <mat-menu #userMenu="matMenu" xPosition="before">
+        <div class="menu-header">
+          <strong>{{ currentUser?.username }}</strong>
+          <span>{{ currentUser?.email }}</span>
+          <mat-chip class="role-chip">{{ currentUser?.role }}</mat-chip>
+        </div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          Sign Out
+        </button>
+      </mat-menu>
+    </mat-toolbar>
+
+    <!-- Page content -->
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

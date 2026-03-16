@@ -1,0 +1,105 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-left">
+      <button mat-icon-button routerLink="/students">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h2>Student Profile</h2>
+    </div>
+    <div class="header-actions" *ngIf="student">
+      <button mat-stroked-button color="primary" *appHasRole="['Admin','Teacher']"
+              [routerLink]="['/students', student.id, 'edit']">
+        <mat-icon>edit</mat-icon> Edit
+      </button>
+      <button mat-stroked-button color="warn" *appHasRole="'Admin'" (click)="deleteStudent()">
+        <mat-icon>delete</mat-icon> Delete
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-overlay">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <div class="detail-layout" *ngIf="!loading && student">
+    <!-- Left: Photo + Status -->
+    <div class="card profile-card">
+      <div class="profile-photo">
+        <img *ngIf="student.photoPath" [src]="getPhotoUrl()" [alt]="student.fullName" />
+        <div *ngIf="!student.photoPath" class="avatar-large">{{ getInitials() }}</div>
+      </div>
+      <h3 class="profile-name">{{ student.fullName }}</h3>
+      <p class="profile-course">{{ student.courseName }}</p>
+      <span [class]="student.isActive ? 'status-badge active' : 'status-badge inactive'">
+        <mat-icon>{{ student.isActive ? 'check_circle' : 'cancel' }}</mat-icon>
+        {{ student.isActive ? 'Active' : 'Inactive' }}
+      </span>
+      <mat-divider class="divider"></mat-divider>
+      <div class="quick-info">
+        <div class="quick-item">
+          <mat-icon>email</mat-icon>
+          <span>{{ student.email }}</span>
+        </div>
+        <div class="quick-item">
+          <mat-icon>phone</mat-icon>
+          <span>{{ student.phone }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Details -->
+    <div class="details-col">
+      <div class="card">
+        <h3 class="section-title">Personal Information</h3>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>First Name</label>
+            <span>{{ student.firstName }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Last Name</label>
+            <span>{{ student.lastName }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Email Address</label>
+            <span>{{ student.email }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Phone Number</label>
+            <span>{{ student.phone }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Date of Birth</label>
+            <span>{{ student.dateOfBirth | date:'MMMM d, y' }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Age</label>
+            <span>{{ getAge() }} years</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="section-title">Academic Information</h3>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>Course</label>
+            <span class="course-badge">{{ student.courseName }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Enrollment Date</label>
+            <span>{{ student.enrollmentDate | date:'MMMM d, y' }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Student ID</label>
+            <span>#{{ student.id.toString().padStart(6, '0') }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Record Created</label>
+            <span>{{ student.createdAt | date:'medium' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

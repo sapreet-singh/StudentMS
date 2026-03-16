@@ -1,0 +1,126 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-left">
+      <button mat-icon-button routerLink="/students" class="back-btn">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h2>{{ isEdit ? 'Edit Student' : 'Add New Student' }}</h2>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-overlay">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading student data...</p>
+  </div>
+
+  <div class="form-layout" *ngIf="!loading">
+    <!-- Photo Upload -->
+    <div class="card photo-card">
+      <h3 class="section-title">Photo</h3>
+      <div class="photo-upload">
+        <div class="photo-preview" [class.has-photo]="photoPreview">
+          <img *ngIf="photoPreview" [src]="photoPreview" alt="Preview" />
+          <div *ngIf="!photoPreview" class="photo-placeholder">
+            <mat-icon>add_a_photo</mat-icon>
+            <span>Upload Photo</span>
+          </div>
+        </div>
+        <div class="photo-actions">
+          <input type="file" #fileInput accept=".jpg,.jpeg,.png" (change)="onPhotoSelected($event)" hidden />
+          <button mat-stroked-button (click)="fileInput.click()" type="button">
+            <mat-icon>upload</mat-icon>
+            {{ photoPreview ? 'Change' : 'Upload' }}
+          </button>
+          <button mat-icon-button color="warn" *ngIf="photoPreview" (click)="removePhoto()" type="button"
+                  matTooltip="Remove photo">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+        <p class="photo-hint">JPG or PNG, max 2MB</p>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="card form-card">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <h3 class="section-title">Personal Information</h3>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName" />
+            <mat-error *ngIf="form.get('firstName')?.hasError('required')">Required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName" />
+            <mat-error *ngIf="form.get('lastName')?.hasError('required')">Required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <mat-icon matPrefix>email</mat-icon>
+            <input matInput formControlName="email" type="email" />
+            <mat-error *ngIf="form.get('email')?.hasError('required')">Required</mat-error>
+            <mat-error *ngIf="form.get('email')?.hasError('email')">Invalid email</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Phone</mat-label>
+            <mat-icon matPrefix>phone</mat-icon>
+            <input matInput formControlName="phone" />
+            <mat-error *ngIf="form.get('phone')?.hasError('required')">Required</mat-error>
+            <mat-error *ngIf="form.get('phone')?.hasError('pattern')">Invalid phone format</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Date of Birth</mat-label>
+            <input matInput [matDatepicker]="dobPicker" formControlName="dateOfBirth" [max]="maxDate" />
+            <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
+            <mat-datepicker #dobPicker></mat-datepicker>
+            <mat-error *ngIf="form.get('dateOfBirth')?.hasError('required')">Required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Enrollment Date</mat-label>
+            <input matInput [matDatepicker]="enrollPicker" formControlName="enrollmentDate" />
+            <mat-datepicker-toggle matSuffix [for]="enrollPicker"></mat-datepicker-toggle>
+            <mat-datepicker #enrollPicker></mat-datepicker>
+            <mat-error *ngIf="form.get('enrollmentDate')?.hasError('required')">Required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <h3 class="section-title">Academic Information</h3>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Course</mat-label>
+            <mat-icon matPrefix>menu_book</mat-icon>
+            <mat-select formControlName="courseId">
+              <mat-option *ngFor="let c of courses" [value]="c.id">{{ c.name }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('courseId')?.hasError('required')">Required</mat-error>
+          </mat-form-field>
+
+          <div class="toggle-field">
+            <mat-slide-toggle formControlName="isActive" color="primary">
+              Student is Active
+            </mat-slide-toggle>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button mat-stroked-button type="button" routerLink="/students">Cancel</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="saving">
+            <mat-spinner diameter="18" *ngIf="saving"></mat-spinner>
+            <mat-icon *ngIf="!saving">{{ isEdit ? 'save' : 'person_add' }}</mat-icon>
+            {{ saving ? 'Saving...' : (isEdit ? 'Update Student' : 'Create Student') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
