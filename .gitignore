@@ -41,3 +41,6 @@
 /frontend/node_modules/
 /frontend/.angular/cache/
 npm-debug.log
+
+# Uploads
+/backend/StudentManagement/Uploads/
