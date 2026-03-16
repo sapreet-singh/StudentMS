@@ -34,11 +34,10 @@
 # Mac
 .DS_Store
 
-# Angular
-/dist
-/node_modules
-/.angular/cache
-
-# node.js
-/node_modules
+# Angular & Node
+/frontend/dist/
+/frontend/tmp/
+/frontend/out-tsc/
+/frontend/node_modules/
+/frontend/.angular/cache/
 npm-debug.log
